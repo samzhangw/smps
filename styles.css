@@ -1,0 +1,1449 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header h1 i {
+    margin-right: 15px;
+    color: #ffd700;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.settings-panel, .student-panel {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.seating-panel {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    grid-column: 1 / -1;
+}
+
+h2 {
+    color: #4a5568;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h2 i {
+    color: #667eea;
+}
+
+.setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.setting-group label {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 5px;
+}
+
+.setting-group input {
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.setting-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    color: white;
+}
+
+.student-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.single-student-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.single-student-input .input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.single-student-input .input-group input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.single-student-input .input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-divider {
+    text-align: center;
+    position: relative;
+    margin: 10px 0;
+}
+
+.form-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.form-divider span {
+    background: white;
+    padding: 0 15px;
+    color: #718096;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.multiple-student-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.multiple-student-input textarea {
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.3s ease;
+}
+
+.multiple-student-input textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.multiple-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.multiple-buttons .btn {
+    flex: 1;
+    justify-content: center;
+}
+
+.student-list h3 {
+    color: #4a5568;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.drag-hint {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.drag-hint i {
+    margin-right: 8px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+#studentsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.student-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 10px;
+    background: #f7fafc;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    cursor: grab;
+    user-select: none;
+    text-align: center;
+    min-height: 90px;
+    position: relative;
+}
+
+.student-item:hover {
+    background: #edf2f7;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.student-item:active {
+    cursor: grabbing;
+}
+
+.student-item.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg) scale(0.95);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.student-item.has-seat {
+    border-color: #48bb78;
+    background: #f0fff4;
+}
+
+.student-item.has-seat:hover {
+    background: #e6fffa;
+}
+
+.seat-status {
+    font-size: 0.75rem;
+    color: #48bb78;
+    font-weight: 600;
+    margin-top: 2px;
+    padding: 2px 6px;
+    background: rgba(72, 187, 120, 0.1);
+    border-radius: 4px;
+    border: 1px solid rgba(72, 187, 120, 0.2);
+}
+
+.student-item:not(.has-seat) .seat-status {
+    color: #a0aec0;
+    background: rgba(160, 174, 192, 0.1);
+    border-color: rgba(160, 174, 192, 0.2);
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.student-name {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.9rem;
+}
+
+.student-note {
+    font-size: 0.75rem;
+    color: #718096;
+    font-style: italic;
+    margin-top: 2px;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
+.student-actions {
+    display: flex;
+    gap: 3px;
+    margin-top: 8px;
+}
+
+.student-actions button {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+    border-radius: 6px;
+}
+
+.seating-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.classroom {
+    position: relative;
+    background: #f7fafc;
+    border-radius: 15px;
+    padding: 30px;
+    border: 3px solid #e2e8f0;
+}
+
+.teacher-desk {
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.teacher-desk i {
+    margin-right: 10px;
+    font-size: 1.3rem;
+}
+
+.seating-grid {
+    display: grid;
+    gap: 15px;
+    justify-content: center;
+}
+
+.seat {
+    width: 120px;
+    height: 80px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.seat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    border-color: #667eea;
+}
+
+.seat.drag-over {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    border-color: #667eea;
+    border-width: 3px;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.seat.swap-target {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+    border-color: #ed8936;
+    border-width: 3px;
+    background: rgba(237, 137, 54, 0.15);
+    animation: swapPulse 1s infinite;
+}
+
+@keyframes swapPulse {
+    0%, 100% {
+        box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+    }
+    50% {
+        box-shadow: 0 8px 25px rgba(237, 137, 54, 0.6);
+    }
+}
+
+.seat.occupied {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+}
+
+.seat.occupied:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.seat-number {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 5px;
+}
+
+.seat.occupied .seat-number {
+    color: rgba(255,255,255,0.8);
+}
+
+.seat-student {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.seat-student-name {
+    font-weight: 600;
+    color: inherit;
+}
+
+.seat-student-note {
+    font-size: 0.7rem;
+    font-weight: normal;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 2px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
+.empty-seat {
+    background: #f7fafc;
+    color: #a0aec0;
+    border-style: dashed;
+}
+
+.empty-seat:hover {
+    background: #edf2f7;
+    color: #718096;
+}
+
+/* 響應式設計 */
+@media (max-width: 1200px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .settings-panel, .student-panel {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    
+    header h1 i {
+        font-size: 1.6rem;
+    }
+    
+    .main-content {
+        gap: 15px;
+    }
+    
+    .settings-panel, .student-panel, .seating-panel {
+        padding: 15px;
+        border-radius: 10px;
+    }
+    
+    h2 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    .setting-group {
+        gap: 10px;
+    }
+    
+    .setting-group input {
+        padding: 10px;
+        font-size: 16px; /* 防止iOS縮放 */
+    }
+    
+    .seating-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .seat {
+        width: 80px;
+        height: 60px;
+        border-radius: 8px;
+    }
+    
+    .seat-number {
+        font-size: 0.7rem;
+    }
+    
+    .seat-student {
+        font-size: 0.75rem;
+    }
+    
+    .single-student-input {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .single-student-input input {
+        padding: 12px;
+        font-size: 16px; /* 防止iOS縮放 */
+    }
+    
+    .multiple-student-input textarea {
+        padding: 12px;
+        font-size: 16px; /* 防止iOS縮放 */
+        min-height: 80px;
+    }
+    
+    .multiple-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    #studentsList {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+    
+    .student-item {
+        padding: 12px 8px;
+        min-height: 80px;
+    }
+    
+    .student-name {
+        font-size: 0.85rem;
+    }
+    
+    .student-actions button {
+        padding: 6px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .drag-hint {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .drag-hint i {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 8px;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .main-content {
+        gap: 10px;
+    }
+    
+    .settings-panel, .student-panel, .seating-panel {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    h2 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+    
+    .setting-group {
+        gap: 8px;
+    }
+    
+    .setting-group input {
+        padding: 8px;
+    }
+    
+    .btn {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .seating-controls {
+        gap: 8px;
+    }
+    
+    .seat {
+        width: 70px;
+        height: 50px;
+        border-radius: 6px;
+    }
+    
+    .seat-number {
+        font-size: 0.6rem;
+        margin-bottom: 2px;
+    }
+    
+    .seat-student {
+        font-size: 0.7rem;
+    }
+    
+    .student-form {
+        gap: 10px;
+    }
+    
+    .single-student-input {
+        gap: 6px;
+    }
+    
+    .single-student-input input {
+        padding: 10px;
+    }
+    
+    .multiple-student-input textarea {
+        padding: 10px;
+        min-height: 60px;
+    }
+    
+    .multiple-buttons {
+        gap: 6px;
+    }
+    
+    #studentsList {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 6px;
+    }
+    
+    .student-item {
+        padding: 8px 6px;
+        min-height: 70px;
+    }
+    
+    .student-actions {
+        gap: 2px;
+        margin-top: 6px;
+    }
+    
+    .student-actions button {
+        padding: 4px 6px;
+        font-size: 0.65rem;
+    }
+    
+    .student-name {
+        font-size: 0.8rem;
+    }
+    
+    .seat-status {
+        font-size: 0.65rem;
+        padding: 1px 4px;
+    }
+    
+    .drag-hint {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+    
+    .classroom {
+        padding: 15px;
+        border-radius: 10px;
+    }
+    
+    .teacher-desk {
+        padding: 10px;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    
+    .teacher-desk i {
+        font-size: 1rem;
+    }
+    
+    .seating-grid {
+        gap: 10px;
+    }
+}
+
+/* 手機版特殊優化 */
+@media (max-width: 480px) {
+    /* 改善觸控體驗 */
+    .btn {
+        min-height: 44px; /* iOS建議的最小觸控目標 */
+        touch-action: manipulation;
+    }
+    
+    .seat {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+    
+    .student-item {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+    
+    /* 改善拖拽體驗 */
+    .student-item.dragging {
+        transform: rotate(3deg) scale(0.9);
+    }
+    
+    .seat.drag-over {
+        transform: translateY(-3px) scale(1.03);
+    }
+    
+    .seat.swap-target {
+        transform: translateY(-3px) scale(1.03);
+        animation: swapPulse 1s infinite;
+    }
+    
+    .drag-hint-popup {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .drag-hint-content {
+        font-size: 0.9rem;
+    }
+    
+    /* 優化模態對話框 */
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 10px;
+        max-height: 90vh;
+    }
+    
+    .modal-header {
+        padding: 15px;
+        flex-shrink: 0;
+    }
+    
+    .modal-header h3 {
+        font-size: 1rem;
+    }
+    
+    .modal-body {
+        padding: 15px;
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+    
+    .student-option {
+        padding: 12px;
+        min-height: 44px;
+        max-height: 80px;
+        overflow: hidden;
+    }
+    
+    .student-option-name {
+        font-size: 1rem;
+        margin-bottom: 3px;
+    }
+    
+    .student-option-note {
+        font-size: 0.8rem;
+        color: #718096;
+        font-style: italic;
+        margin-bottom: 3px;
+    }
+    
+    .student-current-seat {
+        font-size: 0.75rem;
+        padding: 2px 6px;
+        margin-top: 3px;
+    }
+    
+    .modal-footer {
+        padding: 15px;
+        flex-shrink: 0;
+    }
+    
+    /* 手機版資料遺失警告對話框 */
+    .warning-content {
+        width: 95%;
+        max-height: 90vh;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .warning-header {
+        padding: 15px;
+        flex-shrink: 0;
+    }
+    
+    .warning-header h3 {
+        font-size: 1rem;
+    }
+    
+    .warning-body {
+        padding: 15px;
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+    
+    .setting-comparison {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+    }
+    
+    .arrow {
+        transform: rotate(90deg);
+        margin: 5px 0;
+    }
+    
+    .warning-footer {
+        padding: 15px;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+    
+    .warning-footer .btn {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    /* 改善Toast顯示 */
+    .toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    /* 手機版座位選擇網格 */
+    .mobile-seat-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .mobile-seat-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: 6px;
+    }
+    
+    .mobile-seat-option {
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px;
+        text-align: center;
+        min-height: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f7fafc;
+    }
+    
+    .mobile-seat-option.available {
+        border-color: #48bb78;
+        background: #f0fff4;
+    }
+    
+    .mobile-seat-option.available:hover {
+        background: #e6fffa;
+        transform: scale(1.05);
+    }
+    
+    .mobile-seat-option.occupied {
+        border-color: #667eea;
+        background: #e3f2fd;
+        cursor: not-allowed;
+    }
+    
+    .mobile-seat-option.disabled {
+        border-color: #cbd5e0;
+        background: #f7fafc;
+        color: #a0aec0;
+        cursor: not-allowed;
+    }
+    
+    .mobile-seat-number {
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #4a5568;
+        margin-bottom: 2px;
+    }
+    
+    .mobile-seat-status {
+        font-size: 0.6rem;
+        color: #48bb78;
+    }
+    
+    .mobile-seat-student {
+        font-size: 0.6rem;
+        color: #667eea;
+        font-weight: bold;
+    }
+    
+    .mobile-seat-option.disabled .mobile-seat-status {
+        color: #a0aec0;
+    }
+    
+    /* 手機版觸控優化 */
+    .student-item {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .seat {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* 防止手機版縮放 */
+    input[type="text"], input[type="number"] {
+        font-size: 16px !important;
+    }
+    
+    /* 手機版滾動優化 */
+    .modal-body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 手機版按鈕觸控優化 */
+    .btn {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+}
+
+/* 動畫效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-panel, .student-panel, .seating-panel {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* 載入動畫 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 提示訊息 */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    color: #333;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast.success {
+    border-left: 4px solid #48bb78;
+}
+
+.toast.error {
+    border-left: 4px solid #f56565;
+}
+
+.toast.info {
+    border-left: 4px solid #4299e1;
+}
+
+/* 學生選擇對話框 */
+.student-selection-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.student-options {
+    display: grid;
+    gap: 10px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.student-option {
+    padding: 15px;
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    max-height: 120px;
+    overflow: hidden;
+}
+
+.student-option:hover {
+    background: #edf2f7;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.student-option-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.student-current-seat {
+    font-size: 0.85rem;
+    color: #48bb78;
+    font-weight: 500;
+    background: rgba(72, 187, 120, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(72, 187, 120, 0.2);
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.modal-footer {
+    padding: 20px;
+    background: #f7fafc;
+    border-top: 1px solid #e2e8f0;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 拖拽提示樣式 */
+.drag-hint-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 3000;
+    animation: dragHintSlideIn 0.3s ease-out;
+}
+
+.drag-hint-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.drag-hint-content i {
+    font-size: 1.2rem;
+    animation: exchangeSpin 2s infinite;
+}
+
+@keyframes dragHintSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* 資料遺失警告對話框 */
+.data-loss-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.warning-content {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+}
+
+.warning-header {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.warning-header i {
+    font-size: 1.5rem;
+    color: #fff3cd;
+}
+
+.warning-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.warning-body {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.warning-message {
+    color: #d69e2e;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.setting-comparison {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+.current-setting, .new-setting {
+    text-align: center;
+    flex: 1;
+}
+
+.current-setting h4, .new-setting h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    color: #4a5568;
+    font-weight: 600;
+}
+
+.setting-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d3748;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 6px;
+    border: 2px solid #e2e8f0;
+}
+
+.current-setting .setting-value {
+    border-color: #a0aec0;
+    color: #718096;
+}
+
+.new-setting .setting-value {
+    border-color: #ed8936;
+    color: #dd6b20;
+}
+
+.arrow {
+    font-size: 1.5rem;
+    color: #ed8936;
+    font-weight: bold;
+    margin: 0 15px;
+}
+
+.data-impact {
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.data-impact h4 {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.data-impact ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.data-impact li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    color: #4a5568;
+    font-size: 0.95rem;
+}
+
+.data-impact li i {
+    color: #ed8936;
+    width: 16px;
+    text-align: center;
+}
+
+.warning-footer {
+    padding: 20px;
+    background: #f7fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.warning-footer .btn {
+    min-width: 100px;
+}
+
+@keyframes exchangeSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(90deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    75% {
+        transform: rotate(270deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -153,6 +153,17 @@ h2 i {
     gap: 10px;
 }
 
+.single-student-input .button-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.single-student-input .button-group .btn {
+    flex: 1;
+    justify-content: center;
+}
+
 .single-student-input .input-group {
     display: flex;
     gap: 10px;
@@ -601,6 +612,11 @@ h2 i {
         font-size: 16px; /* 防止iOS縮放 */
     }
     
+    .single-student-input .button-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
     .multiple-student-input textarea {
         padding: 12px;
         font-size: 16px; /* 防止iOS縮放 */
@@ -708,6 +724,10 @@ h2 i {
     
     .single-student-input input {
         padding: 10px;
+    }
+    
+    .single-student-input .button-group {
+        gap: 6px;
     }
     
     .multiple-student-input textarea {

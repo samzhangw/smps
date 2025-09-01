@@ -77,6 +77,11 @@ class SeatingChart {
         document.getElementById('clearMultipleInput').addEventListener('click', () => {
             this.clearMultipleInput();
         });
+
+        // 載入預設學生按鈕
+        document.getElementById('loadDefaultStudents').addEventListener('click', () => {
+            this.loadDefaultStudents();
+        });
     }
 
     // 批量新增學生功能
@@ -935,7 +940,67 @@ class SeatingChart {
                 this.updateStudentList();
             } catch (error) {
                 console.error('Error loading from localStorage:', error);
+                this.initializeDefaultStudents();
             }
+        } else {
+            // 如果沒有儲存的資料，初始化預設學生（不清空座位安排）
+            this.initializeDefaultStudents(false);
+        }
+    }
+
+    initializeDefaultStudents(clearSeating = true) {
+        // 預設學生名單
+        const defaultStudents = [
+            '陳昱允', '彭翊恩', '章彥廷', '曾伊凡', '張瑞恩',
+            '張宸晞', '麥惠媛', '陳柳鈴', '吳睿凱', '詹欣容',
+            '李誠恩', '涂毅宏', '曾聿寧', '方語喆', '王勻希',
+            '伊妍欣', '麥庭綺', '彭立宸', '吳睿勳', '連廷駿',
+            '余柏勳', '邱閔昊', '伊妤欣'
+        ];
+
+        // 清空現有學生
+        this.students = [];
+
+        // 新增預設學生
+        defaultStudents.forEach((name, index) => {
+            const student = {
+                id: `default_${Date.now()}_${index}`,
+                name: name,
+                note: '',
+                addedAt: new Date().toISOString()
+            };
+            this.students.push(student);
+        });
+
+        // 如果需要清空座位安排
+        if (clearSeating) {
+            this.seatingMap = {};
+        }
+
+        // 更新UI
+        this.updateStudentList();
+        this.updateStudentCount();
+        this.renderSeatingGrid();
+        this.saveToLocalStorage();
+        
+        this.showToast(`已載入 ${defaultStudents.length} 位預設學生`, 'success');
+    }
+
+    loadDefaultStudents() {
+        // 顯示確認對話框
+        const hasExistingStudents = this.students.length > 0;
+        const hasSeatingArrangement = Object.keys(this.seatingMap).length > 0;
+        
+        let message = '確定要載入預設學生嗎？';
+        if (hasExistingStudents) {
+            message += '\n\n⚠️ 這將會替換現有的學生清單';
+        }
+        if (hasSeatingArrangement) {
+            message += '\n\n⚠️ 現有的座位安排將會被清空';
+        }
+        
+        if (confirm(message)) {
+            this.initializeDefaultStudents();
         }
     }
 

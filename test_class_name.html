@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班級名稱設定測試</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a5568;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .class-display {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .class-display span {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .setting-group {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        .setting-group label {
+            display: block;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+        .setting-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .setting-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .help-text {
+            color: #718096;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        .preview-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        .preview-section h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .preview-content {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .preview-info {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+        }
+        .feature-list {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+        .feature-list h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+        .feature-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        .feature-list li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>班級名稱設定功能測試</h1>
+            <p>測試班級名稱設定和即時預覽效果</p>
+        </div>
+        
+        <div class="class-display">
+            <span id="currentClassDisplay">課後班</span>
+        </div>
+        
+        <div class="setting-group">
+            <label for="className">班級名稱：</label>
+            <input type="text" id="className" placeholder="例如：課後班、正規班、補習班、數學班" maxlength="30">
+            <div class="help-text">輸入班級名稱，系統會即時更新顯示</div>
+        </div>
+        
+        <div class="preview-section">
+            <h3>列印預覽效果</h3>
+            <div class="preview-content">
+                <div class="preview-title" id="previewTitle">課後班學生座位表</div>
+                <div class="preview-info" id="previewInfo">
+                    班級：課後班 | 座位配置：4排6列 | 學生人數：23人 | 已安排座位：20人 | 日期：2024/1/15
+                </div>
+            </div>
+        </div>
+        
+        <div class="feature-list">
+            <h3>新增功能特色</h3>
+            <ul>
+                <li>可自由設定班級名稱（如：課後班、正規班、補習班等）</li>
+                <li>班級名稱會即時顯示在頁面標題</li>
+                <li>列印座位表時會顯示自訂的班級名稱</li>
+                <li>匯出 Word 文件時也會包含班級名稱</li>
+                <li>設定會自動儲存到瀏覽器本地儲存</li>
+                <li>重新載入頁面後班級名稱會保持</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const classNameInput = document.getElementById('className');
+        const currentClassDisplay = document.getElementById('currentClassDisplay');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewInfo = document.getElementById('previewInfo');
+        
+        // 模擬學生資料
+        const mockData = {
+            students: 23,
+            arranged: 20,
+            rows: 4,
+            cols: 6,
+            date: new Date().toLocaleDateString('zh-TW')
+        };
+        
+        function updateClassName(name) {
+            const className = name.trim() || '課後班';
+            
+            // 更新頁面顯示
+            currentClassDisplay.textContent = className;
+            
+            // 更新預覽
+            previewTitle.textContent = `${className}學生座位表`;
+            previewInfo.textContent = `班級：${className} | 座位配置：${mockData.rows}排${mockData.cols}列 | 學生人數：${mockData.students}人 | 已安排座位：${mockData.arranged}人 | 日期：${mockData.date}`;
+            
+            // 儲存到本地儲存
+            localStorage.setItem('testClassName', className);
+        }
+        
+        // 監聽輸入事件
+        classNameInput.addEventListener('input', (e) => {
+            updateClassName(e.target.value);
+        });
+        
+        // 載入儲存的班級名稱
+        const savedClassName = localStorage.getItem('testClassName') || '課後班';
+        classNameInput.value = savedClassName;
+        updateClassName(savedClassName);
+    </script>
+</body>
+</html>

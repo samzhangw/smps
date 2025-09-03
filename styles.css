@@ -34,6 +34,22 @@ header h1 i {
     color: #ffd700;
 }
 
+.class-display {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.class-display span {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
 .main-content {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -115,42 +131,40 @@ h3 i {
     gap: 15px;
 }
 
-.font-size-control input[type="range"] {
+.font-size-control input[type="number"] {
     flex: 1;
-    height: 6px;
-    border-radius: 3px;
-    background: #e2e8f0;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    background: white;
+}
+
+.font-size-control input[type="number"]:focus {
     outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.font-size-control input[type="number"]::-webkit-inner-spin-button,
+.font-size-control input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
-    appearance: none;
+    margin: 0;
 }
 
-.font-size-control input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #667eea;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+.font-size-control input[type="number"] {
+    -moz-appearance: textfield;
 }
 
-.font-size-control input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #667eea;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-.font-size-control span {
+.unit-label {
     font-weight: 600;
     color: #667eea;
-    min-width: 50px;
+    min-width: 30px;
     text-align: center;
+    font-size: 1rem;
 }
 
 .help-text {

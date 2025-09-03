@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>講台列印效果測試</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a5568;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        /* 講台樣式 - 與列印版本一致 */
+        .print-teacher-desk {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background: #2d3748;
+            color: white;
+            border: 3px solid #4a5568;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 22px;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .print-teacher-desk:before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            border-radius: 17px;
+            z-index: -1;
+        }
+        .print-teacher-desk-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .print-teacher-desk i {
+            font-size: 28px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .print-teacher-desk-text {
+            font-size: 24px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+        
+        .feature-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        .feature-section h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        .feature-list li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .print-preview {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        .print-preview h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .preview-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+        .preview-header h1 {
+            font-size: 20px;
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .preview-info {
+            font-size: 12px;
+            color: #666;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+        .preview-seat {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            background: #f9f9f9;
+            font-size: 10px;
+            min-height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .preview-seat.occupied {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .preview-seat-number {
+            font-size: 8px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        .preview-student-name {
+            font-size: 9px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .print-tips {
+            margin: 30px 0;
+            padding: 20px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+        }
+        .print-tips h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        .print-tips ul {
+            color: #856404;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>講台列印效果測試</h1>
+            <p>測試改善後的講台列印顯示效果</p>
+        </div>
+        
+        <div class="print-teacher-desk">
+            <div class="print-teacher-desk-content">
+                <i class="fas fa-chalkboard"></i>
+                <span class="print-teacher-desk-text">講台</span>
+            </div>
+        </div>
+        
+        <div class="feature-section">
+            <h3>講台列印改善特色</h3>
+            <ul class="feature-list">
+                <li>深色背景配合白色邊框，確保列印時清楚可見</li>
+                <li>增加邊框粗度和圓角，提升視覺效果</li>
+                <li>金色圖示和白色文字，形成強烈對比</li>
+                <li>漸層邊框效果，增加美觀性</li>
+                <li>更大的字體和間距，提升可讀性</li>
+                <li>陰影效果，增加立體感</li>
+            </ul>
+        </div>
+        
+        <div class="print-preview">
+            <h3>列印預覽效果</h3>
+            <div class="preview-content">
+                <div class="preview-header">
+                    <h1>課後班學生座位表</h1>
+                    <div class="preview-info">
+                        班級：課後班 | 座位配置：4排6列 | 學生人數：23人 | 已安排座位：20人 | 日期：2024/1/15
+                    </div>
+                </div>
+                
+                <div class="print-teacher-desk">
+                    <div class="print-teacher-desk-content">
+                        <i class="fas fa-chalkboard"></i>
+                        <span class="print-teacher-desk-text">講台</span>
+                    </div>
+                </div>
+                
+                <div class="preview-grid">
+                    <div class="preview-seat occupied">
+                        <div class="preview-seat-number">座位 1-1</div>
+                        <div class="preview-student-name">張小明</div>
+                    </div>
+                    <div class="preview-seat occupied">
+                        <div class="preview-seat-number">座位 1-2</div>
+                        <div class="preview-student-name">李小花</div>
+                    </div>
+                    <div class="preview-seat occupied">
+                        <div class="preview-seat-number">座位 1-3</div>
+                        <div class="preview-student-name">王大華</div>
+                    </div>
+                    <div class="preview-seat occupied">
+                        <div class="preview-seat-number">座位 1-4</div>
+                        <div class="preview-student-name">陳小美</div>
+                    </div>
+                    <div class="preview-seat occupied">
+                        <div class="preview-seat-number">座位 1-5</div>
+                        <div class="preview-student-name">林小強</div>
+                    </div>
+                    <div class="preview-seat occupied">
+                        <div class="preview-seat-number">座位 1-6</div>
+                        <div class="preview-student-name">黃小芳</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="print-tips">
+            <h3>列印建議</h3>
+            <ul>
+                <li>建議使用彩色列印以獲得最佳效果</li>
+                <li>黑白列印時講台仍會清楚顯示</li>
+                <li>講台位置會自動避免分頁</li>
+                <li>列印時會自動調整為適合列印的樣式</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</body>
+</html>

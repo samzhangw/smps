@@ -9,6 +9,7 @@ class SeatingChart {
         this.draggedStudent = null;
         this.draggedElement = null;
         this.printFontSize = 16; // 預設列印字體大小
+        this.className = '課後班'; // 預設班級名稱
         
         this.initializeEventListeners();
         this.loadFromLocalStorage();
@@ -87,6 +88,16 @@ class SeatingChart {
         // 字體大小控制
         document.getElementById('fontSize').addEventListener('input', (e) => {
             this.updateFontSize(e.target.value);
+        });
+        
+        // 字體大小輸入框失去焦點時也更新
+        document.getElementById('fontSize').addEventListener('blur', (e) => {
+            this.updateFontSize(e.target.value);
+        });
+
+        // 班級名稱輸入
+        document.getElementById('className').addEventListener('input', (e) => {
+            this.updateClassName(e.target.value);
         });
     }
 
@@ -926,7 +937,8 @@ class SeatingChart {
             students: this.students,
             seatingConfig: this.seatingConfig,
             seatingMap: this.seatingMap,
-            printFontSize: this.printFontSize
+            printFontSize: this.printFontSize,
+            className: this.className
         };
         localStorage.setItem('seatingChartData', JSON.stringify(data));
     }
@@ -940,12 +952,14 @@ class SeatingChart {
                 this.seatingConfig = data.seatingConfig || { rows: 4, cols: 6 };
                 this.seatingMap = data.seatingMap || {};
                 this.printFontSize = data.printFontSize || 16;
+                this.className = data.className || '課後班';
 
                 // 更新UI
                 document.getElementById('rows').value = this.seatingConfig.rows;
                 document.getElementById('cols').value = this.seatingConfig.cols;
                 document.getElementById('fontSize').value = this.printFontSize;
-                document.getElementById('fontSizeValue').textContent = this.printFontSize + 'px';
+                document.getElementById('className').value = this.className;
+                document.getElementById('currentClassDisplay').textContent = this.className;
                 
                 this.updateStudentList();
             } catch (error) {
@@ -1015,8 +1029,27 @@ class SeatingChart {
     }
 
     updateFontSize(size) {
-        this.printFontSize = parseInt(size);
-        document.getElementById('fontSizeValue').textContent = size + 'px';
+        let fontSize = parseInt(size);
+        
+        // 驗證輸入範圍
+        if (isNaN(fontSize) || fontSize < 8) {
+            fontSize = 8;
+        } else if (fontSize > 48) {
+            fontSize = 48;
+        }
+        
+        // 更新輸入框值（如果超出範圍）
+        if (fontSize !== parseInt(size)) {
+            document.getElementById('fontSize').value = fontSize;
+        }
+        
+        this.printFontSize = fontSize;
+        this.saveToLocalStorage();
+    }
+
+    updateClassName(name) {
+        this.className = name.trim() || '課後班';
+        document.getElementById('currentClassDisplay').textContent = this.className;
         this.saveToLocalStorage();
     }
 
@@ -1334,23 +1367,46 @@ class SeatingChart {
                     }
                     .print-teacher-desk {
                         text-align: center;
-                        margin-bottom: 30px;
-                        padding: 15px;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        margin-bottom: 40px;
+                        padding: 25px;
+                        background: #2d3748;
                         color: white;
-                        border-radius: 10px;
-                        font-weight: 600;
-                        font-size: 18px;
-                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                        border: 3px solid #4a5568;
+                        border-radius: 15px;
+                        font-weight: 700;
+                        font-size: 22px;
+                        position: relative;
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                    }
+                    .print-teacher-desk:before {
+                        content: '';
+                        position: absolute;
+                        top: -2px;
+                        left: -2px;
+                        right: -2px;
+                        bottom: -2px;
+                        background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+                        border-radius: 17px;
+                        z-index: -1;
                     }
                     .print-teacher-desk-content {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        gap: 10px;
+                        gap: 15px;
+                        position: relative;
+                        z-index: 1;
                     }
                     .print-teacher-desk i {
-                        font-size: 20px;
+                        font-size: 28px;
+                        color: #ffd700;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                    }
+                    .print-teacher-desk-text {
+                        font-size: 24px;
+                        font-weight: 800;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                        letter-spacing: 2px;
                     }
                     .print-footer {
                         margin-top: 30px;
@@ -1363,14 +1419,35 @@ class SeatingChart {
                     @media print {
                         body { margin: 0; }
                         .print-seat { page-break-inside: avoid; }
+                        .print-teacher-desk {
+                            background: #2d3748 !important;
+                            border: 3px solid #000 !important;
+                            color: #000 !important;
+                            box-shadow: none !important;
+                        }
+                        .print-teacher-desk:before {
+                            display: none !important;
+                        }
+                        .print-teacher-desk-content {
+                            color: #000 !important;
+                        }
+                        .print-teacher-desk i {
+                            color: #000 !important;
+                            text-shadow: none !important;
+                        }
+                        .print-teacher-desk-text {
+                            color: #000 !important;
+                            text-shadow: none !important;
+                        }
                     }
                 </style>
             </head>
             <body>
                 <div class="print-header">
-                    <h1>學生座位表</h1>
+                    <h1>${this.className}學生座位表</h1>
                     <div class="print-info">
-                        班級：${this.seatingConfig.rows}排${this.seatingConfig.cols}列 | 
+                        班級：${this.className} | 
+                        座位配置：${this.seatingConfig.rows}排${this.seatingConfig.cols}列 | 
                         學生人數：${this.students.length}人 | 
                         已安排座位：${Object.keys(this.seatingMap).length}人 | 
                         日期：${currentDate}
@@ -1379,7 +1456,8 @@ class SeatingChart {
                 
                 <div class="print-teacher-desk">
                     <div class="print-teacher-desk-content">
-                        <i class="fas fa-chalkboard"></i> 講台
+                        <i class="fas fa-chalkboard"></i>
+                        <span class="print-teacher-desk-text">講台</span>
                     </div>
                 </div>
                 
@@ -1513,23 +1591,46 @@ class SeatingChart {
                     }
                     .word-teacher-desk {
                         text-align: center;
-                        margin-bottom: 30px;
-                        padding: 15px;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        margin-bottom: 40px;
+                        padding: 25px;
+                        background: #2d3748;
                         color: white;
-                        border-radius: 10px;
-                        font-weight: 600;
-                        font-size: 18px;
-                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                        border: 3px solid #4a5568;
+                        border-radius: 15px;
+                        font-weight: 700;
+                        font-size: 22px;
+                        position: relative;
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                    }
+                    .word-teacher-desk:before {
+                        content: '';
+                        position: absolute;
+                        top: -2px;
+                        left: -2px;
+                        right: -2px;
+                        bottom: -2px;
+                        background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+                        border-radius: 17px;
+                        z-index: -1;
                     }
                     .word-teacher-desk-content {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        gap: 10px;
+                        gap: 15px;
+                        position: relative;
+                        z-index: 1;
                     }
                     .word-teacher-desk i {
-                        font-size: 20px;
+                        font-size: 28px;
+                        color: #ffd700;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                    }
+                    .word-teacher-desk-text {
+                        font-size: 24px;
+                        font-weight: 800;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                        letter-spacing: 2px;
                     }
                     .word-footer {
                         margin-top: 30px;
@@ -1543,9 +1644,10 @@ class SeatingChart {
             </head>
             <body>
                 <div class="word-header">
-                    <h1>學生座位表</h1>
+                    <h1>${this.className}學生座位表</h1>
                     <div class="word-info">
-                        班級：${this.seatingConfig.rows}排${this.seatingConfig.cols}列 | 
+                        班級：${this.className} | 
+                        座位配置：${this.seatingConfig.rows}排${this.seatingConfig.cols}列 | 
                         學生人數：${this.students.length}人 | 
                         已安排座位：${Object.keys(this.seatingMap).length}人 | 
                         日期：${currentDate}
@@ -1554,7 +1656,8 @@ class SeatingChart {
                 
                 <div class="word-teacher-desk">
                     <div class="word-teacher-desk-content">
-                        <i class="fas fa-chalkboard"></i> 講台
+                        <i class="fas fa-chalkboard"></i>
+                        <span class="word-teacher-desk-text">講台</span>
                     </div>
                 </div>
                 

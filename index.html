@@ -11,6 +11,9 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-chalkboard-teacher"></i> 學生座位排程系統</h1>
+            <div class="class-display">
+                <span id="currentClassDisplay">課後班</span>
+            </div>
         </header>
 
         <div class="main-content">
@@ -29,14 +32,21 @@
                     </button>
                 </div>
                 
+                <h3><i class="fas fa-graduation-cap"></i> 班級設定</h3>
+                <div class="setting-group">
+                    <label for="className">班級名稱：</label>
+                    <input type="text" id="className" placeholder="例如：課後班、正規班、補習班" maxlength="30">
+                    <small class="help-text">設定座位表顯示的班級名稱</small>
+                </div>
+                
                 <h3><i class="fas fa-print"></i> 列印設定</h3>
                 <div class="setting-group">
-                    <label for="fontSize">食性名字體大小：</label>
+                    <label for="fontSize">姓名字體大小：</label>
                     <div class="font-size-control">
-                        <input type="range" id="fontSize" min="12" max="24" value="16" step="1">
-                        <span id="fontSizeValue">16px</span>
+                        <input type="number" id="fontSize" min="8" max="48" value="16" step="1" placeholder="輸入字體大小">
+                        <span class="unit-label">px</span>
                     </div>
-                    <small class="help-text">調整列印時學生姓名的字體大小</small>
+                    <small class="help-text">可自由輸入 8-48px 之間的字體大小</small>
                 </div>
             </div>
 

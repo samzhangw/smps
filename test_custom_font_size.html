@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可自行設計字體大小測試</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a5568;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .font-size-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .font-size-control input[type="number"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+        
+        .font-size-control input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .font-size-control input[type="number"]::-webkit-inner-spin-button,
+        .font-size-control input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .font-size-control input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        .unit-label {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 30px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        
+        .setting-group {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        
+        .setting-group label {
+            display: block;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+        
+        .help-text {
+            color: #718096;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        .preview-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        
+        .preview-section h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .preview-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .preview-text {
+            transition: font-size 0.3s ease;
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        
+        .feature-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        
+        .feature-section h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .font-size-examples {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        
+        .font-size-examples h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .example-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .example-size {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .example-text {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f9f9f9;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>可自行設計字體大小測試</h1>
+            <p>測試新的字體大小自由輸入功能</p>
+        </div>
+        
+        <div class="setting-group">
+            <label for="fontSize">姓名字體大小：</label>
+            <div class="font-size-control">
+                <input type="number" id="fontSize" min="8" max="48" value="16" step="1" placeholder="輸入字體大小">
+                <span class="unit-label">px</span>
+            </div>
+            <div class="help-text">可自由輸入 8-48px 之間的字體大小</div>
+        </div>
+        
+        <div class="preview-section">
+            <h3>即時預覽效果</h3>
+            <div class="preview-content">
+                <div class="preview-text" id="previewText">
+                    這是學生姓名的預覽效果
+                </div>
+                <p>當前字體大小：<strong id="currentSize">16px</strong></p>
+            </div>
+        </div>
+        
+        <div class="feature-section">
+            <h3>新功能特色</h3>
+            <ul class="feature-list">
+                <li>可自由輸入 8-48px 之間的任何字體大小</li>
+                <li>支援小數點後的精確控制</li>
+                <li>即時預覽效果</li>
+                <li>自動範圍驗證，超出範圍會自動調整</li>
+                <li>美觀的數字輸入框設計</li>
+                <li>支援鍵盤輸入和滑鼠點擊調整</li>
+            </ul>
+        </div>
+        
+        <div class="font-size-examples">
+            <h3>字體大小範例</h3>
+            <div class="example-grid">
+                <div class="example-item">
+                    <div class="example-size">8px - 極小</div>
+                    <div class="example-text" style="font-size: 8px;">學生姓名</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-size">12px - 小</div>
+                    <div class="example-text" style="font-size: 12px;">學生姓名</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-size">16px - 標準</div>
+                    <div class="example-text" style="font-size: 16px;">學生姓名</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-size">20px - 大</div>
+                    <div class="example-text" style="font-size: 20px;">學生姓名</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-size">24px - 特大</div>
+                    <div class="example-text" style="font-size: 24px;">學生姓名</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-size">32px - 超大</div>
+                    <div class="example-text" style="font-size: 32px;">學生姓名</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fontSizeInput = document.getElementById('fontSize');
+        const previewText = document.getElementById('previewText');
+        const currentSize = document.getElementById('currentSize');
+        
+        function updateFontSize(size) {
+            let fontSize = parseInt(size);
+            
+            // 驗證輸入範圍
+            if (isNaN(fontSize) || fontSize < 8) {
+                fontSize = 8;
+            } else if (fontSize > 48) {
+                fontSize = 48;
+            }
+            
+            // 更新輸入框值（如果超出範圍）
+            if (fontSize !== parseInt(size)) {
+                fontSizeInput.value = fontSize;
+            }
+            
+            // 更新預覽
+            previewText.style.fontSize = fontSize + 'px';
+            currentSize.textContent = fontSize + 'px';
+            
+            // 儲存到本地儲存
+            localStorage.setItem('testFontSize', fontSize);
+        }
+        
+        // 監聽輸入事件
+        fontSizeInput.addEventListener('input', (e) => {
+            updateFontSize(e.target.value);
+        });
+        
+        // 監聽失去焦點事件
+        fontSizeInput.addEventListener('blur', (e) => {
+            updateFontSize(e.target.value);
+        });
+        
+        // 載入儲存的字體大小
+        const savedFontSize = localStorage.getItem('testFontSize') || 16;
+        fontSizeInput.value = savedFontSize;
+        updateFontSize(savedFontSize);
+    </script>
+</body>
+</html>

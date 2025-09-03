@@ -41,12 +41,12 @@
                 
                 <h3><i class="fas fa-print"></i> 列印設定</h3>
                 <div class="setting-group">
-                    <label for="fontSize">姓名字體大小：</label>
+                    <label for="fontSize">食性名字體大小：</label>
                     <div class="font-size-control">
-                        <input type="number" id="fontSize" min="8" max="48" value="16" step="1" placeholder="輸入字體大小">
-                        <span class="unit-label">px</span>
+                        <input type="range" id="fontSize" min="12" max="48" value="16" step="1">
+                        <span id="fontSizeValue">16px</span>
                     </div>
-                    <small class="help-text">可自由輸入 8-48px 之間的字體大小</small>
+                    <small class="help-text">調整列印時學生姓名的字體大小（12px - 48px）</small>
                 </div>
             </div>
 

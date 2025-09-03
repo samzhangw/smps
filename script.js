@@ -89,11 +89,6 @@ class SeatingChart {
         document.getElementById('fontSize').addEventListener('input', (e) => {
             this.updateFontSize(e.target.value);
         });
-        
-        // 字體大小輸入框失去焦點時也更新
-        document.getElementById('fontSize').addEventListener('blur', (e) => {
-            this.updateFontSize(e.target.value);
-        });
 
         // 班級名稱輸入
         document.getElementById('className').addEventListener('input', (e) => {
@@ -958,6 +953,7 @@ class SeatingChart {
                 document.getElementById('rows').value = this.seatingConfig.rows;
                 document.getElementById('cols').value = this.seatingConfig.cols;
                 document.getElementById('fontSize').value = this.printFontSize;
+                document.getElementById('fontSizeValue').textContent = this.printFontSize + 'px';
                 document.getElementById('className').value = this.className;
                 document.getElementById('currentClassDisplay').textContent = this.className;
                 
@@ -1029,21 +1025,8 @@ class SeatingChart {
     }
 
     updateFontSize(size) {
-        let fontSize = parseInt(size);
-        
-        // 驗證輸入範圍
-        if (isNaN(fontSize) || fontSize < 8) {
-            fontSize = 8;
-        } else if (fontSize > 48) {
-            fontSize = 48;
-        }
-        
-        // 更新輸入框值（如果超出範圍）
-        if (fontSize !== parseInt(size)) {
-            document.getElementById('fontSize').value = fontSize;
-        }
-        
-        this.printFontSize = fontSize;
+        this.printFontSize = parseInt(size);
+        document.getElementById('fontSizeValue').textContent = size + 'px';
         this.saveToLocalStorage();
     }
 

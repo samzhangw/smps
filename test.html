@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字體大小控制測試</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .font-size-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .font-size-control input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .font-size-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .font-size-control span {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 50px;
+            text-align: center;
+        }
+        .preview {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .preview-text {
+            transition: font-size 0.3s ease;
+        }
+        h1 {
+            color: #4a5568;
+            text-align: center;
+        }
+        .help-text {
+            color: #718096;
+            font-size: 0.9rem;
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>字體大小控制測試</h1>
+        <p class="help-text">拖拽滑桿來調整字體大小，即時預覽效果</p>
+        
+        <div class="font-size-control">
+            <label for="fontSize">字體大小：</label>
+            <input type="range" id="fontSize" min="12" max="24" value="16" step="1">
+            <span id="fontSizeValue">16px</span>
+        </div>
+        
+        <div class="preview">
+            <div class="preview-text" id="previewText">
+                這是學生姓名的預覽效果
+            </div>
+        </div>
+        
+        <p class="help-text">這個功能已經成功整合到學生座位排程系統中</p>
+    </div>
+
+    <script>
+        const fontSizeSlider = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const previewText = document.getElementById('previewText');
+        
+        function updateFontSize(size) {
+            const fontSize = parseInt(size);
+            fontSizeValue.textContent = size + 'px';
+            previewText.style.fontSize = size + 'px';
+        }
+        
+        fontSizeSlider.addEventListener('input', (e) => {
+            updateFontSize(e.target.value);
+        });
+        
+        // 初始化
+        updateFontSize(16);
+    </script>
+</body>
+</html>

@@ -8,6 +8,7 @@ class SeatingChart {
         this.seatingMap = {};
         this.draggedStudent = null;
         this.draggedElement = null;
+        this.printFontSize = 16; // 預設列印字體大小
         
         this.initializeEventListeners();
         this.loadFromLocalStorage();
@@ -81,6 +82,11 @@ class SeatingChart {
         // 載入預設學生按鈕
         document.getElementById('loadDefaultStudents').addEventListener('click', () => {
             this.loadDefaultStudents();
+        });
+
+        // 字體大小控制
+        document.getElementById('fontSize').addEventListener('input', (e) => {
+            this.updateFontSize(e.target.value);
         });
     }
 
@@ -919,7 +925,8 @@ class SeatingChart {
         const data = {
             students: this.students,
             seatingConfig: this.seatingConfig,
-            seatingMap: this.seatingMap
+            seatingMap: this.seatingMap,
+            printFontSize: this.printFontSize
         };
         localStorage.setItem('seatingChartData', JSON.stringify(data));
     }
@@ -932,10 +939,13 @@ class SeatingChart {
                 this.students = data.students || [];
                 this.seatingConfig = data.seatingConfig || { rows: 4, cols: 6 };
                 this.seatingMap = data.seatingMap || {};
+                this.printFontSize = data.printFontSize || 16;
 
                 // 更新UI
                 document.getElementById('rows').value = this.seatingConfig.rows;
                 document.getElementById('cols').value = this.seatingConfig.cols;
+                document.getElementById('fontSize').value = this.printFontSize;
+                document.getElementById('fontSizeValue').textContent = this.printFontSize + 'px';
                 
                 this.updateStudentList();
             } catch (error) {
@@ -951,7 +961,7 @@ class SeatingChart {
     initializeDefaultStudents(clearSeating = true) {
         // 預設學生名單
         const defaultStudents = [
-            '陳昱允', '彭翊恩', '章彥廷', '曾伊凡', '張瑞恩',
+            '陳昱允', '彭翊恩', '章彥廷', '曾依凡', '張瑞恩',
             '張宸晞', '麥惠媛', '陳柳鈴', '吳睿凱', '詹欣容',
             '李誠恩', '涂毅宏', '曾聿寧', '方語喆', '王勻希',
             '伊妍欣', '麥庭綺', '彭立宸', '吳睿勳', '連廷駿',
@@ -1002,6 +1012,12 @@ class SeatingChart {
         if (confirm(message)) {
             this.initializeDefaultStudents();
         }
+    }
+
+    updateFontSize(size) {
+        this.printFontSize = parseInt(size);
+        document.getElementById('fontSizeValue').textContent = size + 'px';
+        this.saveToLocalStorage();
     }
 
     addDragEvents(studentItem, student) {
@@ -1302,7 +1318,7 @@ class SeatingChart {
                         margin-bottom: 5px;
                     }
                     .print-student-name {
-                        font-size: 16px;
+                        font-size: ${this.printFontSize}px;
                         font-weight: bold;
                         color: #333;
                     }
@@ -1481,7 +1497,7 @@ class SeatingChart {
                         margin-bottom: 5px;
                     }
                     .word-student-name {
-                        font-size: 16px;
+                        font-size: ${this.printFontSize}px;
                         font-weight: bold;
                         color: #333;
                     }

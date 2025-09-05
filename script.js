@@ -10,6 +10,7 @@ class SeatingChart {
         this.draggedElement = null;
         this.printFontSize = 16; // 預設列印字體大小
         this.className = '課後班'; // 預設班級名稱
+        this.constraints = []; // 不能相鄰的學生配對，元素: {a: studentId, b: studentId}
         
         this.initializeEventListeners();
         this.loadFromLocalStorage();
@@ -94,6 +95,14 @@ class SeatingChart {
         document.getElementById('className').addEventListener('input', (e) => {
             this.updateClassName(e.target.value);
         });
+
+        // 相鄰限制：新增與UI變更
+        const addConstraintBtn = document.getElementById('addConstraint');
+        if (addConstraintBtn) {
+            addConstraintBtn.addEventListener('click', () => {
+                this.addConstraintFromUI();
+            });
+        }
     }
 
     // 批量新增學生功能
@@ -407,6 +416,7 @@ class SeatingChart {
         this.students.push(student);
         this.updateStudentList();
         this.updateStudentCount();
+        this.refreshConstraintSelectors();
         this.saveToLocalStorage();
 
         // 清空輸入欄位
@@ -433,6 +443,10 @@ class SeatingChart {
             this.updateStudentList();
             this.updateStudentCount();
             this.renderSeatingGrid();
+            // 移除與該學生相關的限制
+            this.constraints = this.constraints.filter(c => c.a !== studentId && c.b !== studentId);
+            this.refreshConstraintSelectors();
+            this.renderConstraintsList();
             this.saveToLocalStorage();
             this.showToast(`已移除學生：${studentName}`, 'info');
         }
@@ -500,6 +514,11 @@ class SeatingChart {
             this.addDragEvents(studentItem, student);
             studentsList.appendChild(studentItem);
         });
+
+        // 刷新相鄰限制選單
+        this.refreshConstraintSelectors();
+        // 重新渲染限制清單（名字可能變更）
+        this.renderConstraintsList();
     }
 
     updateStudentCount() {
@@ -552,6 +571,43 @@ class SeatingChart {
                 grid.appendChild(seat);
             }
         }
+    }
+
+    // 取得座位周邊八格的鍵值
+    getAdjacentSeatKeys(seatKey) {
+        const [row, col] = seatKey.split('-').map(Number);
+        const deltas = [-1, 0, 1];
+        const keys = [];
+        for (let dr of deltas) {
+            for (let dc of deltas) {
+                if (dr === 0 && dc === 0) continue;
+                const nr = row + dr;
+                const nc = col + dc;
+                if (nr >= 1 && nr <= this.seatingConfig.rows && nc >= 1 && nc <= this.seatingConfig.cols) {
+                    keys.push(`${nr}-${nc}`);
+                }
+            }
+        }
+        return keys;
+    }
+
+    // 檢查把 studentId 放到 seatKey 是否違反限制
+    violatesConstraints(studentId, seatKey) {
+        const neighbors = this.getAdjacentSeatKeys(seatKey);
+        // 找與 studentId 有限制的對象集合
+        const forbiddenSet = new Set();
+        this.constraints.forEach(c => {
+            if (c.a === studentId) forbiddenSet.add(c.b);
+            if (c.b === studentId) forbiddenSet.add(c.a);
+        });
+        if (forbiddenSet.size === 0) return false;
+        for (const nKey of neighbors) {
+            const neighborId = this.seatingMap[nKey];
+            if (neighborId && forbiddenSet.has(neighborId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     handleSeatClick(seatKey, seatElement) {
@@ -688,6 +744,10 @@ class SeatingChart {
                 }
             } else {
                 // 正常模式：直接安排座位
+                if (this.violatesConstraints(studentId, seatKey)) {
+                    this.showToast('違反相鄰限制，請選擇其他座位', 'error');
+                    return;
+                }
                 this.seatingMap[seatKey] = studentId;
                 this.renderSeatingGrid();
                 this.updateStudentList();
@@ -837,18 +897,30 @@ class SeatingChart {
         // 隨機打亂座位順序
         const shuffledSeats = availableSeats.sort(() => Math.random() - 0.5);
 
-        // 隨機安排學生到隨機座位
-        shuffledStudents.forEach((student, index) => {
-            if (index < shuffledSeats.length) {
-                const seatKey = shuffledSeats[index];
-                this.seatingMap[seatKey] = student.id;
+        // 依序放置，盡量避免違反限制
+        let notPlaced = 0;
+        for (const student of shuffledStudents) {
+            let placed = false;
+            for (const seatKey of shuffledSeats) {
+                if (!this.seatingMap[seatKey] && !this.violatesConstraints(student.id, seatKey)) {
+                    this.seatingMap[seatKey] = student.id;
+                    placed = true;
+                    break;
+                }
             }
-        });
+            if (!placed) {
+                notPlaced++;
+            }
+        }
 
         this.renderSeatingGrid();
         this.updateStudentList(); // 更新學生清單狀態
         this.saveToLocalStorage();
-        this.showToast('座位已隨機安排完成', 'success');
+        if (notPlaced > 0) {
+            this.showToast(`排座完成，但有 ${notPlaced} 位因限制未安排`, 'warning');
+        } else {
+            this.showToast('座位已隨機安排完成', 'success');
+        }
     }
 
     clearSeats() {
@@ -871,6 +943,7 @@ class SeatingChart {
             students: this.students,
             seatingConfig: this.seatingConfig,
             seatingMap: this.seatingMap,
+            constraints: this.constraints,
             savedAt: new Date().toISOString()
         };
 
@@ -902,6 +975,7 @@ class SeatingChart {
                     this.students = config.students;
                     this.seatingConfig = config.seatingConfig;
                     this.seatingMap = config.seatingMap;
+                    this.constraints = config.constraints || [];
 
                     // 更新UI
                     document.getElementById('rows').value = this.seatingConfig.rows;
@@ -910,6 +984,8 @@ class SeatingChart {
                     this.updateStudentList();
                     this.updateStudentCount();
                     this.renderSeatingGrid();
+                    this.refreshConstraintSelectors();
+                    this.renderConstraintsList();
                     this.saveToLocalStorage();
 
                     this.showToast('配置已成功載入', 'success');
@@ -933,7 +1009,8 @@ class SeatingChart {
             seatingConfig: this.seatingConfig,
             seatingMap: this.seatingMap,
             printFontSize: this.printFontSize,
-            className: this.className
+            className: this.className,
+            constraints: this.constraints
         };
         localStorage.setItem('seatingChartData', JSON.stringify(data));
     }
@@ -948,6 +1025,7 @@ class SeatingChart {
                 this.seatingMap = data.seatingMap || {};
                 this.printFontSize = data.printFontSize || 16;
                 this.className = data.className || '課後班';
+                this.constraints = data.constraints || [];
 
                 // 更新UI
                 document.getElementById('rows').value = this.seatingConfig.rows;
@@ -958,6 +1036,8 @@ class SeatingChart {
                 document.getElementById('currentClassDisplay').textContent = this.className;
                 
                 this.updateStudentList();
+                this.refreshConstraintSelectors();
+                this.renderConstraintsList();
             } catch (error) {
                 console.error('Error loading from localStorage:', error);
                 this.initializeDefaultStudents();
@@ -1004,6 +1084,59 @@ class SeatingChart {
         this.saveToLocalStorage();
         
         this.showToast(`已載入 ${defaultStudents.length} 位預設學生`, 'success');
+    }
+
+    // ===== 相鄰限制 UI 與資料 =====
+    refreshConstraintSelectors() {
+        const selectA = document.getElementById('constraintStudentA');
+        const selectB = document.getElementById('constraintStudentB');
+        if (!selectA || !selectB) return;
+        const makeOptions = () => this.students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        const optionsHTML = makeOptions();
+        selectA.innerHTML = `<option value="">選擇學生A</option>` + optionsHTML;
+        selectB.innerHTML = `<option value="">選擇學生B</option>` + optionsHTML;
+    }
+
+    addConstraintFromUI() {
+        const selectA = document.getElementById('constraintStudentA');
+        const selectB = document.getElementById('constraintStudentB');
+        if (!selectA || !selectB) return;
+        const a = selectA.value;
+        const b = selectB.value;
+        if (!a || !b) { this.showToast('請選擇兩位學生', 'error'); return; }
+        if (a === b) { this.showToast('不可選擇同一位學生', 'error'); return; }
+        // 檢查是否已存在（無序配對）
+        const exists = this.constraints.some(c => (c.a === a && c.b === b) || (c.a === b && c.b === a));
+        if (exists) { this.showToast('此限制已存在', 'info'); return; }
+
+        this.constraints.push({ a, b });
+        this.saveToLocalStorage();
+        this.renderConstraintsList();
+        this.showToast('已新增相鄰限制', 'success');
+    }
+
+    removeConstraint(index) {
+        this.constraints.splice(index, 1);
+        this.saveToLocalStorage();
+        this.renderConstraintsList();
+        this.showToast('已移除相鄰限制', 'info');
+    }
+
+    renderConstraintsList() {
+        const container = document.getElementById('constraintsList');
+        if (!container) return;
+        if (!this.constraints || this.constraints.length === 0) {
+            container.innerHTML = '<div class="constraints-empty">尚未設定限制</div>';
+            return;
+        }
+        const nameById = (id) => (this.students.find(s => s.id === id)?.name) || '(已移除)';
+        container.innerHTML = this.constraints.map((c, idx) => {
+            const aName = nameById(c.a);
+            const bName = nameById(c.b);
+            return `
+                <div class=\"constraint-item\">\n                    <span class=\"constraint-pair\">${aName} ↔ ${bName}</span>\n                    <button class=\"btn btn-danger constraint-remove\" onclick=\"seatingChart.removeConstraint(${idx})\"><i class=\"fas fa-trash\"></i></button>\n                </div>
+            `;
+        }).join('');
     }
 
     loadDefaultStudents() {
@@ -1185,6 +1318,12 @@ class SeatingChart {
             }
         });
 
+        // 檢查限制
+        if (this.violatesConstraints(this.draggedStudent.id, seatKey)) {
+            this.showToast('違反相鄰限制，請選擇其他座位', 'error');
+            return;
+        }
+
         // 分配新座位
         this.seatingMap[seatKey] = this.draggedStudent.id;
         this.renderSeatingGrid();
@@ -1248,6 +1387,14 @@ class SeatingChart {
         });
 
         if (student1OriginalSeat) {
+            // 執行座位互換前檢查限制
+            const originalSeat2 = Object.keys(this.seatingMap).find(key => this.seatingMap[key] === student2.id) || targetSeatKey;
+            const newSeatFor1 = targetSeatKey;
+            const newSeatFor2 = student1OriginalSeat;
+            if (this.violatesConstraints(student1.id, newSeatFor1) || this.violatesConstraints(student2.id, newSeatFor2)) {
+                this.showToast('交換後違反相鄰限制，操作已取消', 'error');
+                return;
+            }
             // 執行座位互換
             this.seatingMap[student1OriginalSeat] = student2.id;
             this.seatingMap[targetSeatKey] = student1.id;
@@ -1258,7 +1405,11 @@ class SeatingChart {
             
             this.showToast(`已將 ${student1.name} 和 ${student2.name} 的座位互換`, 'success');
         } else {
-            // 如果學生1原本沒有座位，直接替換
+            // 如果學生1原本沒有座位，直接替換前檢查限制
+            if (this.violatesConstraints(student1.id, targetSeatKey)) {
+                this.showToast('違反相鄰限制，操作已取消', 'error');
+                return;
+            }
             this.seatingMap[targetSeatKey] = student1.id;
             
             this.renderSeatingGrid();

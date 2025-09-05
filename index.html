@@ -41,12 +41,25 @@
                 
                 <h3><i class="fas fa-print"></i> 列印設定</h3>
                 <div class="setting-group">
-                    <label for="fontSize">食性名字體大小：</label>
+                    <label for="fontSize">列印名字體大小：</label>
                     <div class="font-size-control">
                         <input type="range" id="fontSize" min="12" max="48" value="16" step="1">
                         <span id="fontSizeValue">16px</span>
                     </div>
                     <small class="help-text">調整列印時學生姓名的字體大小（12px - 48px）</small>
+                </div>
+
+                <h3><i class="fas fa-ban"></i> 相鄰限制</h3>
+                <div class="setting-group constraints-group">
+                    <label>設定不能坐在附近的學生：</label>
+                    <div class="constraints-inputs">
+                        <select id="constraintStudentA"></select>
+                        <span class="constraints-sep">↔</span>
+                        <select id="constraintStudentB"></select>
+                        <button id="addConstraint" class="btn btn-warning"><i class="fas fa-plus"></i> 新增限制</button>
+                    </div>
+                    <small class="help-text">附近定義：上下左右與斜對角的八個座位</small>
+                    <div id="constraintsList" class="constraints-list"></div>
                 </div>
             </div>
 

@@ -175,6 +175,53 @@ h3 i {
     font-style: italic;
 }
 
+/* 相鄰限制區塊 */
+.constraints-group .constraints-inputs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.constraints-group select {
+    padding: 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    min-width: 120px;
+}
+
+.constraints-sep {
+    color: #718096;
+    font-weight: 700;
+}
+
+.constraints-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.constraint-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.constraint-pair {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.constraints-empty {
+    color: #a0aec0;
+    font-style: italic;
+}
+
 .btn {
     padding: 12px 20px;
     border: none;

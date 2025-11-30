@@ -496,14 +496,18 @@ h3 i {
 
 .student-actions {
     display: flex;
-    gap: 3px;
+    gap: 5px; /* 增加間距 */
     margin-top: 8px;
 }
 
 .student-actions button {
-    padding: 4px 6px;
-    font-size: 0.7rem;
+    padding: 6px 8px;
+    font-size: 0.8rem;
     border-radius: 6px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .seating-controls {
@@ -1069,9 +1073,6 @@ h3 i {
         padding: 12px 15px;
         font-size: 0.9rem;
     }
-    
-    /* 手機版座位選擇網格 */
-    /* 注意：此部分樣式在下方的新版學生選擇對話框中被重寫優化 */
     
     /* 手機版觸控優化 */
     .student-item {

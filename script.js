@@ -11,7 +11,7 @@ class SeatingChart {
         this.printFontSize = 16;
         this.className = '課後班';
         this.constraints = []; 
-        this.hasUnsavedChanges = false; // 新增：追蹤未儲存狀態
+        this.hasUnsavedChanges = false;
         this.loadingOverlay = document.getElementById('loadingOverlay');
         this.loadingText = document.getElementById('loadingText');
 
@@ -34,10 +34,8 @@ class SeatingChart {
         document.getElementById('printSeating').addEventListener('click', () => this.printSeatingChart());
         document.getElementById('exportWord').addEventListener('click', () => this.exportToWord());
         
-        // 檔案輸入事件
         document.getElementById('fileInput').addEventListener('change', (e) => this.handleFileLoad(e));
         
-        // 鍵盤事件
         document.getElementById('studentName').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.addStudent();
         });
@@ -46,17 +44,14 @@ class SeatingChart {
         document.getElementById('clearMultipleInput').addEventListener('click', () => this.clearMultipleInput());
         document.getElementById('loadDefaultStudents').addEventListener('click', () => this.loadDefaultStudents());
         
-        // 字體與班級設定
         document.getElementById('fontSize').addEventListener('input', (e) => this.updateFontSize(e.target.value));
         document.getElementById('className').addEventListener('input', (e) => this.updateClassName(e.target.value));
 
-        // 相鄰限制
         const addConstraintBtn = document.getElementById('addConstraint');
         if (addConstraintBtn) {
             addConstraintBtn.addEventListener('click', () => this.addConstraintFromUI());
         }
 
-        // ★★★ 雲端按鈕監聽 ★★★
         const saveCloudBtn = document.getElementById('saveToCloud');
         if (saveCloudBtn) {
             saveCloudBtn.addEventListener('click', () => this.saveToCloud());
@@ -67,10 +62,8 @@ class SeatingChart {
             loadCloudBtn.addEventListener('click', () => this.loadFromCloud());
         }
 
-        // 新增：離開頁面時的未儲存警示
         window.addEventListener('beforeunload', (e) => {
             if (this.hasUnsavedChanges) {
-                // 現代瀏覽器通常會忽略自訂訊息，顯示預設的警示
                 e.preventDefault();
                 e.returnValue = '';
             }
@@ -78,7 +71,6 @@ class SeatingChart {
     }
 
     // --- 輔助功能 ---
-
     showLoading(text = '載入中...') {
         if (this.loadingOverlay) {
             if (this.loadingText) this.loadingText.textContent = text;
@@ -93,13 +85,11 @@ class SeatingChart {
     }
 
     // --- 雲端功能 ---
-
     saveToCloud() {
         if (!this.gasUrl || this.gasUrl.includes('你的_SCRIPT_ID')) {
             this.showToast('請先在 script.js 中設定 Google Apps Script 網址', 'error');
             return;
         }
-
         this.showLoading('雲端儲存中...');
         const btn = document.getElementById('saveToCloud');
         const originalText = btn ? btn.innerHTML : '';
@@ -123,7 +113,7 @@ class SeatingChart {
         .then(result => {
             if (result.status === 'success') {
                 this.showToast('雲端儲存成功！', 'success');
-                this.hasUnsavedChanges = false; // 儲存成功後，重置未儲存標記
+                this.hasUnsavedChanges = false;
             } else {
                 this.showToast('儲存失敗：' + result.message, 'error');
             }
@@ -147,7 +137,6 @@ class SeatingChart {
             return;
         }
 
-        // 如果不是自動載入，則詢問使用者
         if (!isAutoLoad && !confirm('載入雲端資料將會覆蓋目前的設定，確定要繼續嗎？')) {
             return;
         }
@@ -187,7 +176,6 @@ class SeatingChart {
                 this.refreshConstraintSelectors();
                 this.renderConstraintsList();
                 
-                // 載入後同步到本地，並重置未儲存狀態
                 this.saveToLocalStorage(); 
                 this.hasUnsavedChanges = false; 
 
@@ -209,7 +197,7 @@ class SeatingChart {
         });
     }
 
-    // --- 原有功能 ---
+    // --- 學生管理 ---
 
     addMultipleStudents() {
         const textarea = document.getElementById('multipleStudents');
@@ -416,6 +404,12 @@ class SeatingChart {
         }
     }
 
+    // 處理學生列表點擊「安排座位」
+    handleStudentSeatSelect(studentId) {
+        const student = this.students.find(s => s.id === studentId);
+        if (student) this.showStudentSelectionForMobile(student);
+    }
+
     updateStudentList() {
         const studentsList = document.getElementById('studentsList');
         studentsList.innerHTML = '';
@@ -441,8 +435,9 @@ class SeatingChart {
                     ${hasSeat ? `<div class="seat-status">座位 ${seatLocation}</div>` : '<div class="seat-status">未安排</div>'}
                 </div>
                 <div class="student-actions">
-                    <button class="btn btn-info" onclick="seatingChart.editStudent('${student.id}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-danger" onclick="seatingChart.removeStudent('${student.id}')"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-warning" onclick="seatingChart.handleStudentSeatSelect('${student.id}')" title="安排座位"><i class="fas fa-chair"></i></button>
+                    <button class="btn btn-info" onclick="seatingChart.editStudent('${student.id}')" title="編輯"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger" onclick="seatingChart.removeStudent('${student.id}')" title="刪除"><i class="fas fa-trash"></i></button>
                 </div>`;
             
             this.addDragEvents(studentItem, student);
@@ -588,7 +583,6 @@ class SeatingChart {
                             const currentSeat = Object.keys(this.seatingMap).find(key => this.seatingMap[key] === student.id);
                             seatInfo = `<div class="student-current-seat"><i class="fas fa-chair"></i> ${currentSeat}</div>`;
                         }
-                        // 取名字的第一個字作為頭像
                         const avatarChar = student.name.charAt(0);
                         
                         return `
@@ -625,6 +619,12 @@ class SeatingChart {
                     this.showToast('違反相鄰限制，請選擇其他座位', 'error');
                     return;
                 }
+                
+                // 如果學生原本有座位，先移除舊座位
+                Object.keys(this.seatingMap).forEach(key => {
+                     if (this.seatingMap[key] === studentId && key !== seatKey) delete this.seatingMap[key];
+                });
+
                 this.seatingMap[seatKey] = studentId;
                 this.renderSeatingGrid();
                 this.updateStudentList();
@@ -641,6 +641,7 @@ class SeatingChart {
         for (let row = 1; row <= this.seatingConfig.rows; row++) {
             for (let col = 1; col <= this.seatingConfig.cols; col++) {
                 const seatKey = `${row}-${col}`;
+                // 只列出真正的空位
                 if (!this.seatingMap[seatKey]) availableSeats.push(seatKey);
             }
         }
@@ -665,7 +666,7 @@ class SeatingChart {
             </div>
             <div class="modal-body">
                 <div style="text-align:center; margin-bottom:15px; color:#666;">請點擊下方綠色空位進行安排</div>
-                <div class="mobile-seat-grid">${this.generateMobileSeatGrid(availableSeats)}</div>
+                <div class="mobile-seat-grid">${this.generateMobileSeatGrid(availableSeats, student)}</div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="this.closest('.student-selection-modal').remove()">取消</button>
@@ -676,8 +677,12 @@ class SeatingChart {
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.remove(); });
     }
 
-    generateMobileSeatGrid(availableSeats) {
+    // ★★★ 修正點：加入 targetStudent 參數，並正確獲取 studentId ★★★
+    generateMobileSeatGrid(availableSeats, targetStudent = null) {
         let gridHTML = '';
+        // 優先使用傳入的 targetStudent，如果沒有則嘗試使用拖曳中的學生（相容舊邏輯）
+        const studentId = targetStudent ? targetStudent.id : (this.draggedStudent ? this.draggedStudent.id : '');
+
         for (let row = 1; row <= this.seatingConfig.rows; row++) {
             gridHTML += '<div class="mobile-seat-row">';
             for (let col = 1; col <= this.seatingConfig.cols; col++) {
@@ -687,7 +692,7 @@ class SeatingChart {
                 
                 if (isAvailable) {
                     gridHTML += `
-                        <div class="mobile-seat-option available" onclick="seatingChart.selectStudentForSeat('${seatKey}', '${this.draggedStudent ? this.draggedStudent.id : ''}')">
+                        <div class="mobile-seat-option available" onclick="seatingChart.selectStudentForSeat('${seatKey}', '${studentId}')">
                             <div class="mobile-seat-number">${seatKey}</div>
                             <div class="mobile-seat-status"><i class="fas fa-check"></i></div>
                         </div>`;

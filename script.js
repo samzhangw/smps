@@ -570,10 +570,15 @@ class SeatingChart {
         modalOverlay.className = 'student-selection-modal';
         const modalContent = document.createElement('div');
         modalContent.className = 'modal-content';
-        const modalTitle = isReplacement ? `選擇學生替換座位 ${seatKey} 的學生` : `選擇學生安排到座位 ${seatKey}`;
+        const modalTitle = isReplacement ? `更換座位 ${seatKey} 的學生` : `安排座位 ${seatKey}`;
         
         modalContent.innerHTML = `
-            <div class="modal-header"><h3>${modalTitle}</h3><button class="modal-close" onclick="this.closest('.student-selection-modal').remove()"><i class="fas fa-times"></i></button></div>
+            <div class="modal-header">
+                <h3>${modalTitle}</h3>
+                <button class="modal-close" onclick="this.closest('.student-selection-modal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             <div class="modal-body">
                 <div class="student-options">
                     ${availableStudents.map(student => {
@@ -581,10 +586,14 @@ class SeatingChart {
                         let seatInfo = '';
                         if (hasSeat) {
                             const currentSeat = Object.keys(this.seatingMap).find(key => this.seatingMap[key] === student.id);
-                            seatInfo = `<div class="student-current-seat">目前座位：${currentSeat}</div>`;
+                            seatInfo = `<div class="student-current-seat"><i class="fas fa-chair"></i> ${currentSeat}</div>`;
                         }
+                        // 取名字的第一個字作為頭像
+                        const avatarChar = student.name.charAt(0);
+                        
                         return `
                             <div class="student-option" onclick="seatingChart.selectStudentForSeat('${seatKey}', '${student.id}', ${isReplacement})">
+                                <div class="student-option-avatar">${avatarChar}</div>
                                 <div class="student-option-name">${student.name}</div>
                                 ${student.note ? `<div class="student-option-note">${student.note}</div>` : ''}
                                 ${seatInfo}
@@ -592,7 +601,9 @@ class SeatingChart {
                     }).join('')}
                 </div>
             </div>
-            <div class="modal-footer"><button class="btn btn-secondary" onclick="this.closest('.student-selection-modal').remove()">取消</button></div>`;
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="this.closest('.student-selection-modal').remove()">取消</button>
+            </div>`;
         
         modalOverlay.appendChild(modalContent);
         document.body.appendChild(modalOverlay);
@@ -646,9 +657,19 @@ class SeatingChart {
         modalContent.className = 'modal-content';
         
         modalContent.innerHTML = `
-            <div class="modal-header"><h3>為 ${student.name} 選擇座位</h3><button class="modal-close" onclick="this.closest('.student-selection-modal').remove()"><i class="fas fa-times"></i></button></div>
-            <div class="modal-body"><div class="mobile-seat-grid">${this.generateMobileSeatGrid(availableSeats)}</div></div>
-            <div class="modal-footer"><button class="btn btn-secondary" onclick="this.closest('.student-selection-modal').remove()">取消</button></div>`;
+            <div class="modal-header">
+                <h3><i class="fas fa-user-check"></i> 為 ${student.name} 選擇座位</h3>
+                <button class="modal-close" onclick="this.closest('.student-selection-modal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align:center; margin-bottom:15px; color:#666;">請點擊下方綠色空位進行安排</div>
+                <div class="mobile-seat-grid">${this.generateMobileSeatGrid(availableSeats)}</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="this.closest('.student-selection-modal').remove()">取消</button>
+            </div>`;
         
         modalOverlay.appendChild(modalContent);
         document.body.appendChild(modalOverlay);
@@ -668,20 +689,17 @@ class SeatingChart {
                     gridHTML += `
                         <div class="mobile-seat-option available" onclick="seatingChart.selectStudentForSeat('${seatKey}', '${this.draggedStudent ? this.draggedStudent.id : ''}')">
                             <div class="mobile-seat-number">${seatKey}</div>
-                            <div class="mobile-seat-status">空位</div>
+                            <div class="mobile-seat-status"><i class="fas fa-check"></i></div>
                         </div>`;
                 } else if (currentStudent) {
                     gridHTML += `
                         <div class="mobile-seat-option occupied">
                             <div class="mobile-seat-number">${seatKey}</div>
-                            <div class="mobile-seat-student">${currentStudent.name}</div>
+                            <div class="mobile-seat-status"><i class="fas fa-user"></i></div>
                         </div>`;
                 } else {
                     gridHTML += `
-                        <div class="mobile-seat-option disabled">
-                            <div class="mobile-seat-number">${seatKey}</div>
-                            <div class="mobile-seat-status">不可用</div>
-                        </div>`;
+                        <div class="mobile-seat-option disabled"></div>`;
                 }
             }
             gridHTML += '</div>';

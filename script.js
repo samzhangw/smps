@@ -11,6 +11,9 @@ class SeatingChart {
         this.printFontSize = 16;
         this.className = '課後班';
         this.constraints = []; 
+        this.hasUnsavedChanges = false; // 新增：追蹤未儲存狀態
+        this.loadingOverlay = document.getElementById('loadingOverlay');
+        this.loadingText = document.getElementById('loadingText');
 
         // ★★★ 請將下方的引號內容替換成你的 Google Apps Script 網頁應用程式網址 ★★★
         this.gasUrl = 'https://script.google.com/macros/s/AKfycbyEa42GnSjfraPFBvPkT0XIfHOvDe5lb2jhHWNoVg9jm2Zo5ufYCF3e7oHk2kPHjvOI/exec'; 
@@ -63,6 +66,30 @@ class SeatingChart {
         if (loadCloudBtn) {
             loadCloudBtn.addEventListener('click', () => this.loadFromCloud());
         }
+
+        // 新增：離開頁面時的未儲存警示
+        window.addEventListener('beforeunload', (e) => {
+            if (this.hasUnsavedChanges) {
+                // 現代瀏覽器通常會忽略自訂訊息，顯示預設的警示
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    }
+
+    // --- 輔助功能 ---
+
+    showLoading(text = '載入中...') {
+        if (this.loadingOverlay) {
+            if (this.loadingText) this.loadingText.textContent = text;
+            this.loadingOverlay.classList.add('active');
+        }
+    }
+
+    hideLoading() {
+        if (this.loadingOverlay) {
+            this.loadingOverlay.classList.remove('active');
+        }
     }
 
     // --- 雲端功能 ---
@@ -73,10 +100,10 @@ class SeatingChart {
             return;
         }
 
+        this.showLoading('雲端儲存中...');
         const btn = document.getElementById('saveToCloud');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 儲存中...';
-        btn.disabled = true;
+        const originalText = btn ? btn.innerHTML : '';
+        if (btn) btn.disabled = true;
 
         const data = {
             students: this.students,
@@ -88,17 +115,15 @@ class SeatingChart {
             savedAt: new Date().toISOString()
         };
 
-        // 使用 fetch 發送 POST 請求
         fetch(this.gasUrl, {
             method: 'POST',
             body: JSON.stringify(data),
-            // 注意：跨域請求通常使用 no-cors 或是 text/plain，
-            // 為了讓 GAS 簡單接收，這裡使用預設的 Content-Type (text/plain)
         })
         .then(response => response.json())
         .then(result => {
             if (result.status === 'success') {
                 this.showToast('雲端儲存成功！', 'success');
+                this.hasUnsavedChanges = false; // 儲存成功後，重置未儲存標記
             } else {
                 this.showToast('儲存失敗：' + result.message, 'error');
             }
@@ -108,30 +133,33 @@ class SeatingChart {
             this.showToast('連線錯誤，請檢查網路或 URL', 'error');
         })
         .finally(() => {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
+            this.hideLoading();
+            if (btn) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
     }
 
-    loadFromCloud() {
+    loadFromCloud(isAutoLoad = false) {
         if (!this.gasUrl || this.gasUrl.includes('你的_SCRIPT_ID')) {
-            this.showToast('請先在 script.js 中設定 Google Apps Script 網址', 'error');
+            if (!isAutoLoad) this.showToast('請先在 script.js 中設定 Google Apps Script 網址', 'error');
             return;
         }
 
-        if (!confirm('載入雲端資料將會覆蓋目前的設定，確定要繼續嗎？')) {
+        // 如果不是自動載入，則詢問使用者
+        if (!isAutoLoad && !confirm('載入雲端資料將會覆蓋目前的設定，確定要繼續嗎？')) {
             return;
         }
 
+        this.showLoading('雲端資料讀取中...');
         const btn = document.getElementById('loadFromCloud');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 載入中...';
-        btn.disabled = true;
+        const originalText = btn ? btn.innerHTML : '';
+        if (btn) btn.disabled = true;
 
         fetch(this.gasUrl)
         .then(response => response.json())
         .then(data => {
-            // 檢查是否為空物件
             if (data && Object.keys(data).length > 0 && data.students) {
                 this.students = data.students || [];
                 this.seatingConfig = data.seatingConfig || { rows: 4, cols: 6 };
@@ -140,7 +168,6 @@ class SeatingChart {
                 this.className = data.className || '課後班';
                 this.constraints = data.constraints || [];
 
-                // 更新 UI
                 document.getElementById('rows').value = this.seatingConfig.rows;
                 document.getElementById('cols').value = this.seatingConfig.cols;
                 
@@ -159,20 +186,26 @@ class SeatingChart {
                 this.renderSeatingGrid();
                 this.refreshConstraintSelectors();
                 this.renderConstraintsList();
-                this.saveToLocalStorage(); // 同步更新本地儲存
+                
+                // 載入後同步到本地，並重置未儲存狀態
+                this.saveToLocalStorage(); 
+                this.hasUnsavedChanges = false; 
 
                 this.showToast('雲端資料載入成功！', 'success');
             } else {
-                this.showToast('雲端目前沒有資料', 'info');
+                if (!isAutoLoad) this.showToast('雲端目前沒有資料', 'info');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            this.showToast('讀取錯誤，請檢查網路或 URL', 'error');
+            if (!isAutoLoad) this.showToast('讀取錯誤，請檢查網路或 URL', 'error');
         })
         .finally(() => {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
+            this.hideLoading();
+            if (btn) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
     }
 
@@ -711,6 +744,7 @@ class SeatingChart {
         link.download = `座位配置_${new Date().toLocaleDateString('zh-TW')}.json`;
         link.click();
         this.showToast('配置已儲存到檔案', 'success');
+        this.hasUnsavedChanges = false; // 匯出檔案也視為已儲存
     }
 
     loadConfiguration() {
@@ -737,6 +771,7 @@ class SeatingChart {
                     this.refreshConstraintSelectors();
                     this.renderConstraintsList();
                     this.saveToLocalStorage();
+                    this.hasUnsavedChanges = false; // 載入檔案後視為乾淨狀態
                     this.showToast('配置已成功載入', 'success');
                 } else {
                     this.showToast('檔案格式不正確', 'error');
@@ -760,6 +795,9 @@ class SeatingChart {
             constraints: this.constraints
         };
         localStorage.setItem('seatingChartData', JSON.stringify(data));
+        // 每次儲存到 LocalStorage 時，表示有資料更動，標記為未儲存
+        // 除非是剛載入完畢（由載入函式重置為 false）
+        this.hasUnsavedChanges = true; 
     }
 
     loadFromLocalStorage() {
@@ -1141,6 +1179,7 @@ class SeatingChart {
         link.download = `學生座位表_${currentDate}.doc`;
         link.click();
         this.showToast('Word文件已下載', 'success');
+        this.hasUnsavedChanges = false; // 匯出 Word 也視為已儲存
     }
 
     generateWordTable() {
@@ -1176,5 +1215,7 @@ class SeatingChart {
 let seatingChart;
 document.addEventListener('DOMContentLoaded', () => {
     seatingChart = new SeatingChart();
+    // 進入頁面時自動載入雲端資料
+    seatingChart.loadFromCloud(true);
 });
 window.seatingChart = seatingChart;

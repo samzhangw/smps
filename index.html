@@ -17,7 +17,6 @@
         </header>
 
         <div class="main-content">
-            <!-- 設定區域 -->
             <div class="settings-panel">
                 <h2><i class="fas fa-cog"></i> 座位設定</h2>
                 <div class="setting-group">
@@ -63,7 +62,6 @@
                 </div>
             </div>
 
-            <!-- 學生管理區域 -->
             <div class="student-panel">
                 <h2><i class="fas fa-users"></i> 學生管理</h2>
                 <div class="student-form">
@@ -99,14 +97,13 @@
                 
                 <div class="student-list">
                     <h3>學生清單 (<span id="studentCount">0</span>人)</h3>
-                                    <div class="drag-hint">
-                    <i class="fas fa-hand-pointer"></i> 拖拽學生到座位進行安排或更換
-                </div>
+                    <div class="drag-hint">
+                        <i class="fas fa-hand-pointer"></i> 拖拽學生到座位進行安排或更換
+                    </div>
                     <div id="studentsList"></div>
                 </div>
             </div>
 
-            <!-- 座位區域 -->
             <div class="seating-panel">
                 <h2><i class="fas fa-chair"></i> 座位配置</h2>
                 <div class="seating-controls">
@@ -116,18 +113,27 @@
                     <button id="clearSeats" class="btn btn-warning">
                         <i class="fas fa-eraser"></i> 清空座位
                     </button>
+                    
                     <button id="saveConfig" class="btn btn-success">
-                        <i class="fas fa-save"></i> 儲存配置
+                        <i class="fas fa-save"></i> 儲存檔案
                     </button>
-                                         <button id="loadConfig" class="btn btn-info">
-                         <i class="fas fa-folder-open"></i> 載入配置
-                     </button>
-                     <button id="printSeating" class="btn btn-warning">
-                         <i class="fas fa-print"></i> 列印座位表
-                     </button>
-                     <button id="exportWord" class="btn btn-success">
-                         <i class="fas fa-file-word"></i> 匯出Word
-                     </button>
+                    <button id="loadConfig" class="btn btn-info">
+                        <i class="fas fa-folder-open"></i> 載入檔案
+                    </button>
+
+                    <button id="saveToCloud" class="btn btn-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-cloud-upload-alt"></i> 雲端儲存
+                    </button>
+                    <button id="loadFromCloud" class="btn btn-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-cloud-download-alt"></i> 雲端載入
+                    </button>
+
+                    <button id="printSeating" class="btn btn-warning">
+                        <i class="fas fa-print"></i> 列印座位表
+                    </button>
+                    <button id="exportWord" class="btn btn-success">
+                        <i class="fas fa-file-word"></i> 匯出Word
+                    </button>
                 </div>
                 
                 <div class="classroom">
@@ -140,7 +146,6 @@
         </div>
     </div>
 
-    <!-- 載入配置的隱藏檔案輸入 -->
     <input type="file" id="fileInput" accept=".json" style="display: none;">
 
     <script src="script.js"></script>
